@@ -1,22 +1,29 @@
-package kr.ac.sejong.db.java_test.JavaAlg.Array;
-import java.util.Random;
+package kr.ac.sejong.db.java_test.JavaAlg.Search;
 import java.util.Scanner;
 
 public class App {
 
 	public static void main(String[] args) {
-		Random rand = new Random();
+		int size, searchIndex;
 		Scanner scanner = new Scanner(System.in);
-		System.out.print("배열 크기: ");
-		int n = scanner.nextInt();
 		
-		MaxOfArrayRand array = new MaxOfArrayRand(n);
-		for(int i=0; i<array.getArraySize(); i++) {
-			array.setArray(i, rand.nextInt());
+		System.out.print("요솟수 : ");
+		size = scanner.nextInt();
+		
+		int arr[] = new int[size];
+		
+		//여기 수정
+		for(int i=0; i<size; i++) {
+			System.out.printf("x[%d] : ", i);
+			arr[i] = scanner.nextInt();
 		}
-		array.getArray();
-		System.out.println(array.foundMax());
+		System.out.print("검색할 값 : ");
+		searchIndex = scanner.nextInt();
 		
+		SeqSearch s = new SeqSearch();
+		
+		s.find(arr, searchIndex);
+	
 		scanner.close();
 	}
 
