@@ -15,6 +15,6 @@
 All of that practice java is for Final Project.<br>
 It is expected that final project using java is super hard without proficiency of JAVA.<br>
 So, I need to practice for prepare that and being more valuable developer.<br>
-I am sure of my highly growth  when I completely finish this project.
+I am sure of my highly growth  when I completely finish this study.
 
 </h3>
