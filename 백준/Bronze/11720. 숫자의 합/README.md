@@ -1,3 +1,12 @@
+
+<h1 style="background-color:red">[Notice]</h1>
+
+오류가 있는 문제
+- 테스트 케이스가 정확하지 않음
+- 숫자의 개수를 입력 받을 필요 X
+- 입력받는 숫자가 0~9 사이라는 제약도 없음
+
+
 # [Bronze IV] 숫자의 합 - 11720 
 
 [문제 링크](https://www.acmicpc.net/problem/11720) 
