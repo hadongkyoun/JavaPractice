@@ -27,12 +27,12 @@ public class Main {
 		long cnt = 0;
 		// 구간 합 % M 배열 갱신
 		for(int i=1; i<N+1; i++){
-			int remain = (int) (S[i]%M);
+			long remain = S[i]%M;
 			if(remain == 0)
 				cnt++;
 
 			// 나머지를 C의 인덱스로 받아서 저장 ( 차후 작업 )
-			C[remain]++;
+			C[(int)(remain)]++;
 		}
 		
 		for(int i=0; i<M; i++){
