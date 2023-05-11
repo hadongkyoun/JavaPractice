@@ -36,16 +36,16 @@ public class Main{
                     end_i--;
                 }
                 else{
-										if(start_i != i && end_i != i){
-											cnt++;
-											break;
-										}
-										else if(start_i == i){
-											start_i++;
-										}
-										else if(end_i == i){
-											end_i--;
-										}
+					if(start_i != i && end_i != i){
+						cnt++;
+						break;
+					}
+					else if(start_i == i){
+						start_i++;
+					}
+					else if(end_i == i){
+						end_i--;
+					}
                 }
             }
         }
