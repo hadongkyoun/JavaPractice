@@ -1,27 +1,28 @@
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.Stack;
 
 public class Main {
 	public static void main(String[] args) throws IOException{
-		StringBuilder sb = new StringBuilder();
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(st.nextToken());		
+		int N = Integer.parseInt(br.readLine());		
 
 		//수열 A
 		int[] A = new int[N];
-		
+
 		//정답을 저장할 배열 answer
 		int[] answer = new int[N];
-		int index = 0;
-
+		int index = 0;		
 		//수열 A 값 입력
-		st = new StringTokenizer(br.readLine());
+		String[] data = br.readLine().split(" ");	//공백으로 나눠서 값 받음
 		for(int i=0; i<N; i++){
-			A[i] = Integer.parseInt(st.nextToken());
+			A[i] = Integer.parseInt(data[i]);
 		}
 			
-		//스택 생성
+		//스택 생성 ( my Class : 56 )
 		MyStack stackManager = new MyStack(N);
 
 		//마지막 원소까지 push 됐을때
@@ -44,11 +45,11 @@ public class Main {
 			answer[stackManager.peek()] = -1;
 			stackManager.pop();
 		}
-
-		for(int i=0; i<N; i++)
-			sb.append(answer[i] +" ");
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		
-		System.out.println(sb);
+		for(int i=0; i<N; i++)
+			bw.write(answer[i] + " ");
+		bw.flush();
 	}
 }
 
