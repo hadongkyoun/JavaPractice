@@ -28,19 +28,22 @@ public class Main {
 			adj[v1].add(v2);
 		}
 
-		ArrayList<Integer> answer = new ArrayList<Integer>();
-		BFS(X, K, adj, visited, distance, answer);
+		PriorityQueue<Integer> pQue = new PriorityQueue<Integer>();
+		BFS(X, K, adj, visited, distance, pQue);
 		
-		Collections.sort(answer);
-		if(answer.size() == 0)
+		
+		if(pQue.isEmpty())
 			bw.write("-1");
-		for(int i=0; i<answer.size(); i++)
-			bw.write(answer.get(i) + "\n");
+		else{
+			while(!pQue.isEmpty())
+				bw.write(pQue.poll() + "\n");
+		}
 			
+				
 		bw.flush();
 		bw.close();
 	}
-	static void BFS(int X, int K, ArrayList<Integer>[] adj, boolean[] visited, int[] distance,  ArrayList<Integer> answer){
+	static void BFS(int X, int K, ArrayList<Integer>[] adj, boolean[] visited, int[] distance,  PriorityQueue<Integer> answer){
 		Queue<Integer> que = new LinkedList<Integer>();
 		que.add(X);
 		visited[X] = true;
@@ -51,7 +54,6 @@ public class Main {
 				if(!visited[adjVertex]){
 					que.add(adjVertex);
 					visited[adjVertex] = true;
-					
 					distance[adjVertex] = distance[current_V] + 1;
 
 					if(distance[adjVertex] == K)
