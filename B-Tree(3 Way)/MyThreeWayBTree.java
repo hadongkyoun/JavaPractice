@@ -1,9 +1,12 @@
 package org.dfpl.db.hash.m16011279;
 //package 이름은 org.dfpl.db.hash.m학번 입니다. 
 
+import java.util.Arrays;
+
 //지키지 않을 시 반려합니다. 
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -129,6 +132,7 @@ public class MyThreeWayBTree implements NavigableSet<Integer> {
 		//max-key Property를 어긴 경우 ( T 노드부터 시작 )
 		while(ReNode != null && ReNode.keyList.size() > 2) {
 			
+			Collections.sort(ReNode.keyList);
 			//ReNode Split 시작
 			
 			//Split 하고 기존의 정보들을 연결하고 추가 할 새로운 베이스
@@ -177,109 +181,131 @@ public class MyThreeWayBTree implements NavigableSet<Integer> {
 				}
 				
 				//parentNode가 null이면 root Node
-				//middle을 새로 생성해 줬기 때문에 이 작업 필수
+				// middle을 새로 생성해 줬기 때문에 이 작업 필수
 				this.root = middle;
 			}
 
 			else {
-				if (ReNode.isLeaf()) {
-					// middle을 부모노드 key에 추가 ( bottom up )
-					parentReNode.keyList.add(ReNode.keyList.get(1));
-					// 앞서 생성한 middle은 필요 없다
-					middle = null;
-					
-					// ReNode가 부모노드의 오른쪽 자식인 상태에서 Overflow가 일어났는지
-					// 			부모노드의 왼쪽 자식인 상태에서 Overflow가 일어 났는지 확인
-					
-					
-					// 		우선 부모노드의 children 개수가 몇개인지 확인하는게 중요
-					// 		children ArrayList의 인덱스 착오가 없게끔 하기 위해서임
-					// 		children의 개수가 2개일땐 인덱스 0이 LC 인덱스 1이 RC
-					// 		children의 개수가 3개일땐 인덱스 0이 LC 인덱스 1이 MC 인덱스 2가 RC
-					// 		children의 개수가 4개일땐(OverFlow 상황) (...) 인덱스 1이 MLC 인덱스 2가 MRC 인덱스 3이 RC(구현 필요 X)
-					
-					
-					// parentReNode children get(0) => LC
-					// parentReNode children get(1) => RC
-					if (parentReNode.children.size() == 2) {
-						
-						//	Split 되어야 할 ReNode가 부모노드의 오른쪽 자식일때
-						if(parentReNode.children.get(1).equals(ReNode)) {
-							
-							//기존에 연결 된 ReNode 삭제 (올바른 갱신을 위함)
-							parentReNode.children.remove(ReNode);
-							
-							parentReNode.children.add(left);	//parentNode의 MC가 됨
-							left.parent = parentReNode;
-							
-							parentReNode.children.add(right);	//parentNode의 RC가 됨
-							right.parent = parentReNode;
-						}
-						
-						//	Split 되어야 할 ReNode가 부모노드의 왼쪽 자식일때
-						else if(parentReNode.children.get(0).equals(ReNode)) {
-							
-							//기존에 연결 된 ReNode 삭제 (올바른 갱신을 위함)
-							parentReNode.children.remove(ReNode);
 
-							
-							parentReNode.children.add(0,right);	//parentNode의 MC
-							right.parent = parentReNode;
-							//분리된 left를 부모노드 children ArrayList 맨 앞에 추가 (인덱스 유지)
-							parentReNode.children.add(0,left);		//parentNode의 LC
-							left.parent = parentReNode;
-						}
+				// 앞서 생성한 middle은 필요 없다
+				middle = null;
+
+				// ReNode가 부모노드의 오른쪽 자식인 상태에서 Overflow가 일어났는지
+				// 부모노드의 왼쪽 자식인 상태에서 Overflow가 일어 났는지 확인
+
+				// 우선 부모노드의 children 개수가 몇개인지 확인하는게 중요
+				// children ArrayList의 인덱스 착오가 없게끔 하기 위해서임
+				// children의 개수가 2개일땐 인덱스 0이 LC 인덱스 1이 RC
+				// children의 개수가 3개일땐 인덱스 0이 LC 인덱스 1이 MC 인덱스 2가 RC
+				// children의 개수가 4개일땐(OverFlow 상황) (...) 인덱스 1이 MLC 인덱스 2가 MRC 인덱스 3이 RC(구현 필요
+				// X)
+
+				// parentReNode children get(0) => LC
+				// parentReNode children get(1) => RC
+				if (parentReNode.children.size() == 2) {
+
+					// Split 되어야 할 ReNode가 부모노드의 오른쪽 자식일때
+					if (parentReNode.children.get(1).equals(ReNode)) {
+
+						// middle key 그냥 추가
+						parentReNode.keyList.add(ReNode.keyList.get(1));
+
+						// 기존에 연결 된 ReNode 삭제 (올바른 갱신을 위함)
+						parentReNode.children.remove(ReNode);
+
+						parentReNode.children.add(left); // parentNode의 MC가 됨
+						left.parent = parentReNode;
+
+						parentReNode.children.add(right); // parentNode의 RC가 됨
+						right.parent = parentReNode;
 					}
-					
-					// parentReNode children get(0) => LC
-					//parentReNode children get(1) => MC
-					// parentReNode children get(2) => RC
-					else if(parentReNode.children.size() == 3) {
-						//	Split 되어야 할 ReNode가 부모노드의 오른쪽 자식일때
-						if(parentReNode.children.get(2).equals(ReNode)) {
-							
-							//기존에 연결 된 ReNode 삭제 (올바른 갱신을 위함)
-							parentReNode.children.remove(ReNode);
-							
-							parentReNode.children.add(left);	//parentNode의 MRC가 됨
-							left.parent = parentReNode;
-							
-							parentReNode.children.add(right);	//parentNode의 RC가 됨
-							right.parent = parentReNode;
-						}
-						
-						//	Split 되어야 할 ReNode가 부모노드의 왼쪽 자식일때
-						else if(parentReNode.children.get(0).equals(ReNode)) {
-							
-							//기존에 연결 된 ReNode 삭제 (올바른 갱신을 위함)
-							parentReNode.children.remove(ReNode);
 
-							parentReNode.children.add(0, right);	//parentNode의 MLC
-							right.parent = parentReNode;
-							//분리된 left를 부모노드 children ArrayList 맨 앞에 추가 (인덱스 유지)
-							parentReNode.children.add(0, left);		//parentNode의 LC
-							left.parent = parentReNode;
-							
-						}
+					// Split 되어야 할 ReNode가 부모노드의 왼쪽 자식일때
+					else if (parentReNode.children.get(0).equals(ReNode)) {
+
+						// middle을 부모노드 keyList 맨 앞에 추가 ( bottom up )
+						parentReNode.keyList.add(0, ReNode.keyList.get(1));
+
+						// 기존에 연결 된 ReNode 삭제 (올바른 갱신을 위함)
+						parentReNode.children.remove(ReNode);
+
+						parentReNode.children.add(0, right); // parentNode의 MC
+						right.parent = parentReNode;
+						// 분리된 left를 부모노드 children ArrayList 맨 앞에 추가 (인덱스 유지)
+						parentReNode.children.add(0, left); // parentNode의 LC
+						left.parent = parentReNode;
 					}
 				}
 
-				// 내부노드라면 여기서 더 추가 작업 밑에 자식들을 가져와야 함
-				if (!ReNode.isLeaf()) {
-						left.children.add(ReNode.children.get(0));
-						ReNode.children.get(0).parent = left;
-						// left의 오른쪽 children에 Split 되어야 할 노드의 중앙child의 왼쪽(MLC)을 추가한다
-						left.children.add(ReNode.children.get(1));
-						ReNode.children.get(1).parent = left;
-						// right의 왼쪽 children에 Split 되어야 할 노드의 중앙 child의 오른쪽(MRC) child를 추가한다
-						right.children.add(ReNode.children.get(2));
-						ReNode.children.get(2).parent = right;
-						// right의 오른쪽 children에 Split 되어야 할 노드의 오른쪽(RC)을 추가한다
-						right.children.add(ReNode.children.get(3));
-						ReNode.children.get(3).parent = right;
-				}
+				// parentReNode children get(0) => LC
+				// parentReNode children get(1) => MC
+				// parentReNode children get(2) => RC
+				else if (parentReNode.children.size() == 3) {
+					// Split 되어야 할 ReNode가 부모노드의 오른쪽 자식일때
+					if (parentReNode.children.get(2).equals(ReNode)) {
 
-			}	
+						parentReNode.keyList.add(ReNode.keyList.get(1));
+
+						// 기존에 연결 된 ReNode 삭제 (올바른 갱신을 위함)
+						parentReNode.children.remove(ReNode);
+
+						parentReNode.children.add(left); // parentNode의 MRC가 됨
+						left.parent = parentReNode;
+
+						parentReNode.children.add(right); // parentNode의 RC가 됨
+						right.parent = parentReNode;
+					}
+
+					// Split 되어야 할 ReNode가 부모노드의 왼쪽 자식일때
+					else if (parentReNode.children.get(0).equals(ReNode)) {
+
+						// 맨앞에 삽입
+						parentReNode.keyList.add(0, ReNode.keyList.get(1));
+
+						// 기존에 연결 된 ReNode 삭제 (올바른 갱신을 위함)
+						parentReNode.children.remove(ReNode);
+
+						parentReNode.children.add(0, right); // parentNode의 MLC
+						right.parent = parentReNode;
+						// 분리된 left를 부모노드 children ArrayList 맨 앞에 추가 (인덱스 유지)
+						parentReNode.children.add(0, left); // parentNode의 LC
+						left.parent = parentReNode;
+
+					}
+					// Split 되어야 할 ReNode가 부모노드의 중앙 자식일때
+					else if (parentReNode.children.get(1).equals(ReNode)) {
+
+						// 중앙에 삽입
+						parentReNode.keyList.add(1, ReNode.keyList.get(1));
+
+						// 기존에 연결 된 ReNode 삭제 (올바른 갱신을 위함)
+						parentReNode.children.remove(ReNode);
+
+						// 분리된 left를 부모노드 children ArrayList 맨 앞에 추가 (인덱스 유지)
+						parentReNode.children.add(1, right); // parentNode의 MRC
+						right.parent = parentReNode;
+						parentReNode.children.add(1, left); // parentNode의 MLC
+						left.parent = parentReNode;
+					}
+				}
+				
+				//내부노드일 경우 밑에 children 전부 연결
+				if(!ReNode.isLeaf()) {
+					left.makeChildSpace();
+					right.makeChildSpace();
+					left.children.add(ReNode.children.get(0));
+					ReNode.children.get(0).parent = left;
+					// left의 오른쪽 children에 Split 되어야 할 노드의 중앙child의 왼쪽(MLC)을 추가한다
+					left.children.add(ReNode.children.get(1));
+					ReNode.children.get(1).parent = left;
+					// right의 왼쪽 children에 Split 되어야 할 노드의 중앙 child의 오른쪽(MRC) child를 추가한다
+					right.children.add(ReNode.children.get(2));
+					ReNode.children.get(2).parent = right;
+					// right의 오른쪽 children에 Split 되어야 할 노드의 오른쪽(RC)을 추가한다
+					right.children.add(ReNode.children.get(3));
+					ReNode.children.get(3).parent = right;
+				}
+			}
 			
 			ReNode = parentReNode;
 
@@ -299,7 +325,8 @@ public class MyThreeWayBTree implements NavigableSet<Integer> {
 		//삽입 할 T 노드 찾기
 		MyThreeWayBTreeNode T = findT(this.root, e.intValue());
 		T.keyList.add(e);
-		
+		//키를 삽입하고 정렬 해주기
+		Collections.sort(T.keyList);
 		//max-key Property를 어긴 경우 ( T 노드부터 시작 )
 		if(T.keyList.size()>2)
 			rebalance(T);
